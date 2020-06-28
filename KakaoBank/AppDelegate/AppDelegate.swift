@@ -15,12 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
-                window = UIWindow(frame: UIScreen.main.bounds)
+        window = UIWindow(frame: UIScreen.main.bounds)
         if #available(iOS 13, *) {
             // do only pure app launch stuff, not interface stuff
         } else {
-            window?.rootViewController = RootViewController()
-            window?.makeKeyAndVisible()
+            let registerStoryboard = UIStoryboard(name: "Search", bundle: nil)
+            let viewController = registerStoryboard.instantiateViewController(withIdentifier: "SearchMainViewController")
+            let navigationController = BaseNavigationController(rootViewController: viewController)
+            navigationController.navigationBar.isTranslucent = false
+            self.window?.rootViewController = navigationController
+            self.window?.makeKeyAndVisible()
         }
         return true
     }

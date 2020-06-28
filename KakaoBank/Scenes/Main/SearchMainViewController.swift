@@ -11,79 +11,252 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
-protocol SearchMainDisplayLogic: class
-{
-  func displaySomething(viewModel: SearchMain.Something.ViewModel)
+protocol SearchMainDisplayLogic: class {
+    func displaySomething(viewModel: SearchMain.Something.ViewModel)
 }
 
-class SearchMainViewController: BaseViewController, SearchMainDisplayLogic
-{
-  var interactor: SearchMainBusinessLogic?
-  var router: (NSObjectProtocol & SearchMainRoutingLogic & SearchMainDataPassing)?
 
-  // MARK: Object lifecycle
-  
-  override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?)
-  {
-    super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
-    setup()
-  }
-  
-  required init?(coder aDecoder: NSCoder)
-  {
-    super.init(coder: aDecoder)
-    setup()
-  }
-  
-  // MARK: Setup
-  
-  private func setup()
-  {
-    let viewController = self
-    let interactor = SearchMainInteractor()
-    let presenter = SearchMainPresenter()
-    let router = SearchMainRouter()
-    viewController.interactor = interactor
-    viewController.router = router
-    interactor.presenter = presenter
-    presenter.viewController = viewController
-    router.viewController = viewController
-    router.dataStore = interactor
-  }
-  
-  // MARK: Routing
-  
-  override func prepare(for segue: UIStoryboardSegue, sender: Any?)
-  {
-    if let scene = segue.identifier {
-      let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
-      if let router = router, router.responds(to: selector) {
-        router.perform(selector, with: segue)
-      }
+class SearchMainViewController: BaseViewController, SearchMainDisplayLogic {
+    
+    var interactor: SearchMainBusinessLogic?
+    var router: (NSObjectProtocol & SearchMainRoutingLogic & SearchMainDataPassing)?
+    
+    // MARK: Object lifecycle
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+        setup()
     }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        setup()
+    }
+    
+    // MARK: Setup
+    
+    private func setup() {
+        let viewController = self
+        let interactor = SearchMainInteractor()
+        let presenter = SearchMainPresenter()
+        let router = SearchMainRouter()
+        viewController.interactor = interactor
+        viewController.router = router
+        interactor.presenter = presenter
+        presenter.viewController = viewController
+        router.viewController = viewController
+        router.dataStore = interactor
+    }
+    
+    // MARK: Routing
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let scene = segue.identifier {
+            let selector = NSSelectorFromString("routeTo\(scene)WithSegue:")
+            if let router = router, router.responds(to: selector) {
+                router.perform(selector, with: segue)
+            }
+        }
+    }
+    
+    // MARK: View lifecycle
+    func setupNavBar() {
+        self.title = "검색"
+//        let searchController = UISearchController(searchResultsController: nil)
+//        searchController.searchBar.delegate = self
+//        navigationItem.searchController = searchController
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        tableView.setLayerBorder()
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "App Store"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+        searchController.searchBar.delegate = self
+        searchController.searchBar.backgroundColor = .white
+        
+//        AppManager.shared.addRecentSearchWord(text: "카카오")
+//        AppManager.shared.addRecentSearchWord(text: "카카오뱅")
+//        AppManager.shared.addRecentSearchWord(text: "카")
+//        AppManager.shared.addRecentSearchWord(text: "카카")
+//        AppManager.shared.addRecentSearchWord(text: "카카오뱅크")
+//        AppManager.shared.addRecentSearchWord(text: "ㅋ")
+//        AppManager.shared.addRecentSearchWord(text: "카ㅋ")
+//        AppManager.shared.addRecentSearchWord(text: "카카ㅇ")
+//        AppManager.shared.addRecentSearchWord(text: "카카오ㅂ")
+//        AppManager.shared.addRecentSearchWord(text: "카카오배")
+//        AppManager.shared.addRecentSearchWord(text: "카카오뱅ㅋ")
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        let singleImageContent = UINib(nibName: "RecentWordTableViewCell", bundle: nil)
+        self.tableView.register(singleImageContent, forCellReuseIdentifier: "RecentWordTableViewCell")
+
+        setupNavBar()
+        
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        navigationItem.hidesSearchBarWhenScrolling = false
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+//        navigationItem.hidesSearchBarWhenScrolling = true
+        self.tableView.contentInsetAdjustmentBehavior = .never
+
+    }
+    // MARK: Do something
+    
+    @IBOutlet weak var tableView: UITableView!
+    //    var words: [Candy] = []
+    let searchController = UISearchController(searchResultsController: nil)
+    var filteredWords: [String] = []
+    
+    var isSearchBarEmpty: Bool {
+        return searchController.searchBar.text?.isEmpty ?? true
+    }
+    
+    var isFiltering: Bool {
+        let searchBarScopeIsFiltering = searchController.searchBar.selectedScopeButtonIndex != 0
+        return searchController.isActive && (!isSearchBarEmpty || searchBarScopeIsFiltering)
+    }
+    
+    
+    func filterContentForSearchText(_ searchText: String) {
+        let list = AppManager.shared.getRecentSearchWordList()
+        filteredWords = list.filter { (list: String) -> Bool in
+            
+            if isSearchBarEmpty {
+                return false
+            }
+            else {
+                return list.lowercased().contains(searchText.lowercased())
+            }
+        }
+
+        tableView.reloadData()
+    }
+    func doSomething() {
+        let request = SearchMain.Something.Request()
+        interactor?.doSomething(request: request)
+    }
+    
+    func displaySomething(viewModel: SearchMain.Something.ViewModel) {
+        //nameTextField.text = viewModel.name
+    }
+    
+    
+}
+
+extension SearchMainViewController: UISearchResultsUpdating {
+  func updateSearchResults(for searchController: UISearchController) {
+    let searchBar = searchController.searchBar
+//    let category = Candy.Category(rawValue:
+//      searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex])
+    filterContentForSearchText(searchBar.text!)
+  }
+}
+
+
+
+
+extension SearchMainViewController: UISearchBarDelegate {
+  func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
+//    let category = Candy.Category(rawValue:
+//      searchBar.scopeButtonTitles![selectedScope])
+    filterContentForSearchText(searchBar.text!)
   }
   
-  // MARK: View lifecycle
-  
-  override func viewDidLoad()
-  {
-    super.viewDidLoad()
-    doSomething()
+  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+    
   }
-  
-  // MARK: Do something
-  
-  //@IBOutlet weak var nameTextField: UITextField!
-  
-  func doSomething()
-  {
-    let request = SearchMain.Something.Request()
-    interactor?.doSomething(request: request)
-  }
-  
-  func displaySomething(viewModel: SearchMain.Something.ViewModel)
-  {
-    //nameTextField.text = viewModel.name
-  }
+}
+
+
+extension SearchMainViewController: UITableViewDelegate, UITableViewDataSource {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        if isFiltering {
+          return filteredWords.count
+        }
+        
+        let list = AppManager.shared.getRecentSearchWordList()
+        return list.count        
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
+        if let cell = tableView.dequeueReusableCell(withIdentifier: "RecentWordTableViewCell", for:indexPath) as? RecentWordTableViewCell {
+//            cell.indexPath = indexPath
+//            cell.selectedIndexPath = self.selectedIndexPath
+//            cell.row = indexPath.row
+//            cell.delegate = self
+//            cell.cellDic = cellInfo
+
+            let list = AppManager.shared.getRecentSearchWordList()
+            
+            if isFiltering {
+                cell.recentLabel.text = filteredWords[indexPath.row]
+              } else {
+                cell.recentLabel.text = list[indexPath.row]
+              }
+
+            cell.selectionStyle = .none
+            return cell
+        }
+
+        
+        return UITableViewCell()
+    }
+    
+    
+//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+//        return self.searchController.searchBar
+//    }
+//
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return searchController.searchBar.frame.height
+//    }
+    
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 40
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        
+        let view: UIView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.width, height: 40.0))
+        let title: UILabel = UILabel(frame: CGRect(x: 12.0, y: 5.0, width: 150.0, height: 30.0))
+        title.backgroundColor = .clear
+        title.textColor = .black
+        title.font = .boldSystemFont(ofSize: 22.0)
+        title.text = "최근 검색어"
+        title.lineBreakMode = .byTruncatingTail
+        view.addSubview(title)
+        return view
+
+    }
+}
+
+
+extension SearchMainViewController: UIScrollViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if (scrollView.contentOffset.y >= 45) {
+//            navigationItem.titleView?.addSubview(searchController.searchBar)
+//            navigationItem.searchController = searchController
+        } else {
+            
+//            tableView.tableHeaderView = searchController.searchBar
+        }
+    }
 }

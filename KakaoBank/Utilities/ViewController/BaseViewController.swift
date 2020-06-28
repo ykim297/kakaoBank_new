@@ -10,6 +10,10 @@ import UIKit
 
 class BaseViewController: UIViewController {
     var keyboardHeight: CGFloat = 0.0
+    
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
@@ -43,6 +47,11 @@ class BaseViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+//        self.setNeedsStatusBarAppearanceUpdate()
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationController?.navigationItem.largeTitleDisplayMode = .always
+
+
     }
 
     @objc func keyboardWillShow(_ notification: Notification) {

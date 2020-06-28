@@ -18,6 +18,9 @@
 		1956EDE624A854CC00D450B0 /* SearchMainModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956EDE024A854CC00D450B0 /* SearchMainModels.swift */; };
 		1956EDE724A854CC00D450B0 /* SearchMainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956EDE124A854CC00D450B0 /* SearchMainViewController.swift */; };
 		1956EDE824A854CC00D450B0 /* SearchMainInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956EDE224A854CC00D450B0 /* SearchMainInteractor.swift */; };
+		1956EDEA24A857A200D450B0 /* SceneDelegate+Function.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956EDE924A857A200D450B0 /* SceneDelegate+Function.swift */; };
+		1956EDEF24A8898700D450B0 /* RecentWordTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1956EDED24A8898700D450B0 /* RecentWordTableViewCell.swift */; };
+		1956EDF024A8898700D450B0 /* RecentWordTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1956EDEE24A8898700D450B0 /* RecentWordTableViewCell.xib */; };
 		1970004B24A73A1A00D11916 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970004A24A73A1A00D11916 /* AppDelegate.swift */; };
 		1970004D24A73A1A00D11916 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970004C24A73A1A00D11916 /* SceneDelegate.swift */; };
 		1970004F24A73A1A00D11916 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1970004E24A73A1A00D11916 /* ViewController.swift */; };
@@ -61,6 +64,9 @@
 		1956EDE024A854CC00D450B0 /* SearchMainModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMainModels.swift; sourceTree = "<group>"; };
 		1956EDE124A854CC00D450B0 /* SearchMainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMainViewController.swift; sourceTree = "<group>"; };
 		1956EDE224A854CC00D450B0 /* SearchMainInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchMainInteractor.swift; sourceTree = "<group>"; };
+		1956EDE924A857A200D450B0 /* SceneDelegate+Function.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SceneDelegate+Function.swift"; sourceTree = "<group>"; };
+		1956EDED24A8898700D450B0 /* RecentWordTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecentWordTableViewCell.swift; sourceTree = "<group>"; };
+		1956EDEE24A8898700D450B0 /* RecentWordTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = RecentWordTableViewCell.xib; sourceTree = "<group>"; };
 		1970004724A73A1A00D11916 /* KakaoBank.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = KakaoBank.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1970004A24A73A1A00D11916 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1970004C24A73A1A00D11916 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -119,6 +125,7 @@
 				1970004A24A73A1A00D11916 /* AppDelegate.swift */,
 				1956EDD024A84BCD00D450B0 /* AppDelegate+Function.swift */,
 				1970004C24A73A1A00D11916 /* SceneDelegate.swift */,
+				1956EDE924A857A200D450B0 /* SceneDelegate+Function.swift */,
 			);
 			path = AppDelegate;
 			sourceTree = "<group>";
@@ -168,6 +175,23 @@
 			path = Main;
 			sourceTree = "<group>";
 		};
+		1956EDEB24A85D0C00D450B0 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				1956EDEC24A8892800D450B0 /* TableViewCell */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		1956EDEC24A8892800D450B0 /* TableViewCell */ = {
+			isa = PBXGroup;
+			children = (
+				1956EDED24A8898700D450B0 /* RecentWordTableViewCell.swift */,
+				1956EDEE24A8898700D450B0 /* RecentWordTableViewCell.xib */,
+			);
+			path = TableViewCell;
+			sourceTree = "<group>";
+		};
 		1970003E24A73A1A00D11916 = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +211,7 @@
 		1970004924A73A1A00D11916 /* KakaoBank */ = {
 			isa = PBXGroup;
 			children = (
+				1956EDEB24A85D0C00D450B0 /* View */,
 				1956EDDB24A8549500D450B0 /* Scenes */,
 				1956EDD824A852A800D450B0 /* StoryBoard */,
 				1956EDCF24A84BB000D450B0 /* AppDelegate */,
@@ -366,6 +391,7 @@
 				1970005424A73A1C00D11916 /* Assets.xcassets in Resources */,
 				1956EDDA24A852BE00D450B0 /* Search.storyboard in Resources */,
 				1970005224A73A1A00D11916 /* Main.storyboard in Resources */,
+				1956EDF024A8898700D450B0 /* RecentWordTableViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,7 +418,9 @@
 				1970008124A8472900D11916 /* UILabel+.swift in Sources */,
 				1970006624A8463600D11916 /* TextStyle.swift in Sources */,
 				1970008824A8472900D11916 /* RootViewController.swift in Sources */,
+				1956EDEF24A8898700D450B0 /* RecentWordTableViewCell.swift in Sources */,
 				1970004F24A73A1A00D11916 /* ViewController.swift in Sources */,
+				1956EDEA24A857A200D450B0 /* SceneDelegate+Function.swift in Sources */,
 				1970004B24A73A1A00D11916 /* AppDelegate.swift in Sources */,
 				1956EDE724A854CC00D450B0 /* SearchMainViewController.swift in Sources */,
 				1970007D24A8472900D11916 /* Int+.swift in Sources */,
@@ -482,7 +510,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -536,7 +564,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 12.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

@@ -32,9 +32,9 @@ class AppManager {
             }
         }
 
-        if recentSearchWords.count > 4 {
-            recentSearchWords.removeFirst()
-        }
+//        if recentSearchWords.count > 4 {
+//            recentSearchWords.removeFirst()
+//        }
         
         recentSearchWords.append(text)
         defaults.set(recentSearchWords, forKey: userDefault_RecentSearchWords)
