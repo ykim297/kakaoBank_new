@@ -1,0 +1,34 @@
+{
+  "object": {
+    "pins": [
+      {
+        "package": "RxSwift",
+        "repositoryURL": "https://github.com/ReactiveX/RxSwift.git",
+        "state": {
+          "branch": null,
+          "revision": "002d325b0bdee94e7882e1114af5ff4fe1e96afa",
+          "version": "5.1.1"
+        }
+      },
+      {
+        "package": "swift-log",
+        "repositoryURL": "https://github.com/apple/swift-log/",
+        "state": {
+          "branch": null,
+          "revision": "74d7b91ceebc85daf387ebb206003f78813f71aa",
+          "version": "1.2.0"
+        }
+      },
+      {
+        "package": "LoggingOSLog",
+        "repositoryURL": "https://github.com/chrisaljoudi/swift-log-oslog",
+        "state": {
+          "branch": null,
+          "revision": "2d3fb10a99b4f3cd3297f6873a8b24ac49b7eff3",
+          "version": "0.2.1"
+        }
+      }
+    ]
+  },
+  "version": 1
+}
