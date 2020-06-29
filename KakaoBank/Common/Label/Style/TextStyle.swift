@@ -13,14 +13,15 @@
 #endif
 
 enum TextStyle: Int {
-    case navigationTitle
-    case bigTitle
     case title
-    case boldTitle
     case subTitle
+    case bigTitle
     case lightSubTitle
-    case price
     case body
+    
+    case navigationTitle
+    case boldTitle
+    case price
     case folder
     
     public var font: UIFont {
@@ -33,6 +34,8 @@ enum TextStyle: Int {
             return Fonts.bigTitle
         case .lightSubTitle:
             return Fonts.lightSubTitle
+        case .body:
+            return Fonts.body
 
         case .navigationTitle:
             return Fonts.navigationTitle
@@ -40,8 +43,6 @@ enum TextStyle: Int {
             return Fonts.boldTitle
         case .price:
             return Fonts.price
-        case .body:
-            return Fonts.body
         case .folder:
             return Fonts.folder
         }
@@ -60,17 +61,22 @@ enum TextStyle: Int {
         var lineHeight: CGFloat = 0.0
         var color = UIColor.black
         
-        switch self {
-            
-            case .title:
-                lineHeight = 18.0
-                color = .black
-            case .subTitle:
-                lineHeight = 15.0
-                color = .gray
-            case .bigTitle:
-                lineHeight = 40.0
-                color = .black
+        switch self {            
+        case .title:
+            lineHeight = 18.0
+            color = .black
+        case .subTitle:
+            lineHeight = 15.0
+            color = .gray
+        case .bigTitle:
+            lineHeight = 40.0
+            color = .black
+        case .lightSubTitle:
+            lineHeight = 13.0
+            color = .black
+        case .body:
+            lineHeight = 18.0
+            color = .black
 
 
 
@@ -80,14 +86,8 @@ enum TextStyle: Int {
         case .boldTitle:
             lineHeight = 20.0
             color = .black
-        case .lightSubTitle:
-            lineHeight = 13.0
-            color = .black
         case .price:
             lineHeight = 36.0
-            color = .black
-        case .body:
-            lineHeight = 18.0
             color = .black
         case .folder:
             lineHeight = 16.0

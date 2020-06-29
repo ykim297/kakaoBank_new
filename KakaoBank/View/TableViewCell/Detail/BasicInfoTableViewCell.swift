@@ -10,7 +10,6 @@ import UIKit
 
 class BasicInfoTableViewCell: UITableViewCell, Reusable {
     public static var identifier: String = "BasicInfo"
-
     
     let title: Label = Label(style: .bigTitle)
     let subTitle: Label = Label(style: .lightSubTitle)
@@ -34,9 +33,6 @@ class BasicInfoTableViewCell: UITableViewCell, Reusable {
         return button
     }()
 
-    
-
-
     public override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         self.addSubview(self.title)
@@ -55,13 +51,10 @@ class BasicInfoTableViewCell: UITableViewCell, Reusable {
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-
     
 }
 
-
 extension BasicInfoTableViewCell {
-    
     private func setAutoLayOut() {
         self.mainImageView.snp.makeConstraints { view -> Void in
             view.left.equalTo(self.snp.left).offset(10.0)
@@ -98,6 +91,7 @@ extension BasicInfoTableViewCell {
             view.bottom.equalTo(self.snp.bottom).offset(-10.0)
         }
     }
+    
     public func setup(dic: SearchResultModel) {
         mainImageView.downloadImageFrom(urlString: dic.artworkUrl100, imageMode: .scaleAspectFit)
         title.text = dic.trackName

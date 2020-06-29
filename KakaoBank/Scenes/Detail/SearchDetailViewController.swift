@@ -27,6 +27,7 @@ class SearchDetailViewController: BaseViewController, SearchDetailDisplayLogic {
     var detailItem: SearchResultModel?
     var tableViewCellItems = BehaviorRelay(value: [String]())
     var isReleaseNote: Bool = false
+    var isDescriptionNote: Bool = false
     
     lazy var tableView: UITableView = {
         let tableView = UITableView(frame: .zero, style: .plain)
@@ -37,6 +38,12 @@ class SearchDetailViewController: BaseViewController, SearchDetailDisplayLogic {
         tableView.rowHeight = UITableView.automaticDimension
         tableView.allowsSelection = true
         tableView.register(cellType: BasicInfoTableViewCell.self)
+        tableView.register(cellType: RatingInfoTableViewCell.self)
+        tableView.register(cellType: NewInfoTableViewCell.self)
+        tableView.register(cellType: ScreenImagesTableViewCell.self)
+        tableView.register(cellType: DescriptionTableViewCell.self)
+        tableView.register(cellType: CompanyInfoTableViewCell.self)
+        
         tableView.contentInsetAdjustmentBehavior = .never
         return tableView
     }()
@@ -132,12 +139,12 @@ extension SearchDetailViewController {
 // RxTableView
 extension SearchDetailViewController {
     private func setTableViewCell() {
-        let items = [BasicInfoTableViewCell.identifier]
-//                     SearchDetailInfoCell.identifier,
-//                     SearchDetailSimpleCell.identifier,
-//                     SearchDetailSimpleCell.identifier,
-//                     SearchDetailSimpleCell.identifier,
-//                     SearchDetailFolderCell.identifier,
+        let items = [BasicInfoTableViewCell.identifier,
+                     RatingInfoTableViewCell.identifier,
+                     NewInfoTableViewCell.identifier,
+                     ScreenImagesTableViewCell.identifier,
+                     DescriptionTableViewCell.identifier,
+                     CompanyInfoTableViewCell.identifier]
 //                     SearchDetailDescriptionCell.identifier,
 //                     SearchDetailGenreCell.identifier]
         self.tableViewCellItems.accept(items)
@@ -161,69 +168,36 @@ extension SearchDetailViewController {
                                                              cellType: BasicInfoTableViewCell.self)
 
                     cell.setup(dic: item)
+                    return cell
+                case RatingInfoTableViewCell.identifier:
+                    let cell = tableView.dequeueReusableCell(for: indexPath,
+                                                             cellType: RatingInfoTableViewCell.self)
+                    cell.setup(dic: item)
+                    return cell
+                case NewInfoTableViewCell.identifier:
+                    let cell = tableView.dequeueReusableCell(for: indexPath,
+                                                             cellType: NewInfoTableViewCell.self)
+                    cell.setup(dic: item, show: self.isReleaseNote)
+                    return cell
+                case ScreenImagesTableViewCell.identifier:
+                    let cell = tableView.dequeueReusableCell(for: indexPath,
+                                                             cellType: ScreenImagesTableViewCell.self)
+                    
+                    cell.setup(urls: item.screenshotUrls)
 
                     return cell
-//                case SearchDetailInfoCell.identifier:
-//                    let cell = tableView.dequeueReusableCell(for: indexPath,
-//                                                             cellType: SearchDetailInfoCell.self)
-//                    cell.setup(title: item.trackName,
-//                               companyName: item.artistName,
-//                               price: String(Int(item.price).withCommas()))
-//                    cell.buttonView.webButton.rx.tap.subscribe(onNext: { [weak self] in
-//                        guard let self = self else { return }
-//                        self.selectedWebButton()
-//                    }).disposed(by: self.disposeBag)
-//
-//                    cell.buttonView.shareButton.rx.tap.subscribe(onNext: { [weak self] in
-//                        guard let self = self else { return }
-//                        self.selectedSharebutton()
-//                    }).disposed(by: self.disposeBag)
-//
-//                    return cell
-//                case SearchDetailSimpleCell.identifier:
-//                    let cell = tableView.dequeueReusableCell(for: indexPath,
-//                                                             cellType: SearchDetailSimpleCell.self)
-//                    switch index {
-//                    case 2:
-//                        let size: String = Units(bytes: Int64(item.fileSizeBytes)!).getReadableUnit()
-//                        cell.setup(title: "크기",
-//                                   info: size)
-//                        break
-//                    case 3:
-//                        cell.setup(title: "연령",
-//                                   info: item.trackContentRating)
-//                        break
-//                    case 4:
-//                        cell.setup(title: "새로운 기능",
-//                                   info: item.version,
-//                                   isFolderable: true)
-//                        break
-//                    default:
-//                        break
-//                    }
-//                    return cell
-//                case SearchDetailFolderCell.identifier:
-//                    let cell = tableView.dequeueReusableCell(for: indexPath,
-//                                                             cellType: SearchDetailFolderCell.self)
-//                    let releaseNotes: String = item.releaseNotes ?? "변경 사항이 없습니다."
-//                    let height: CGFloat = releaseNotes.height(withConstrainedWidth: UIScreen.width - 90.0,
-//                                                              font: Fonts.folder)
-//                    cell.setup(folder: releaseNotes,
-//                               height: self.isReleaseNote == false ? 0.0 : height)
-//
-//                    return cell
-//                case SearchDetailDescriptionCell.identifier:
-//                    let cell = tableView.dequeueReusableCell(for: indexPath,
-//                                                             cellType: SearchDetailDescriptionCell.self)
-//                    cell.setup(body: item.description)
-//
-//                    return cell
-//                case SearchDetailGenreCell.identifier:
-//                    let cell = tableView.dequeueReusableCell(for: indexPath,
-//                                                             cellType: SearchDetailGenreCell.self)
-//                    cell.setup(genre: item.genres)
-//
-//                    return cell
+                case DescriptionTableViewCell.identifier:
+                    let cell = tableView.dequeueReusableCell(for: indexPath,
+                                                             cellType: DescriptionTableViewCell.self)
+                    cell.setup(dic: item, show: self.isDescriptionNote)
+
+                    return cell
+                case CompanyInfoTableViewCell.identifier:
+                    let cell = tableView.dequeueReusableCell(for: indexPath,
+                                                             cellType: CompanyInfoTableViewCell.self)
+                    cell.setup(dic: item)
+
+                    return cell
                 default:
                     return UITableViewCell()
                 }
@@ -231,22 +205,40 @@ extension SearchDetailViewController {
     }
     
     private func setTableViewSelection() {
-//        self.tableView.rx.itemSelected
-//            .subscribe(onNext: { [weak self] indexPath in
-//                if indexPath.row != 4 { return }
-//                guard let self = self else { return }
-//                self.isReleaseNote = !self.isReleaseNote
-//                let newIndexPath: IndexPath = IndexPath(row: 5, section: 0)
-//
-//                if let cell: SearchDetailSimpleCell = self.tableView.cellForRow(at: indexPath) as? SearchDetailSimpleCell {
-//                    cell.arrow.text = self.isReleaseNote == true ? "\u{2303}" : "\u{2304}"
-//                }
-//
-//                self.tableView.beginUpdates()
-//                self.tableView.reloadRows(at: [newIndexPath], with: .fade)
-//                self.tableView.endUpdates()
-//
-//            }).disposed(by: self.disposeBag)
+        self.tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                switch indexPath.row {
+                case 2:
+                    if self.isReleaseNote == true { return }
+                    self.isReleaseNote = !self.isReleaseNote
+                    if let cell: NewInfoTableViewCell = self.tableView.cellForRow(at: indexPath) as? NewInfoTableViewCell {
+                        cell.updateAutoLayout()
+                    }
+                    
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                    self.tableView.endUpdates()
+
+                    break
+                case 4:
+                    if self.isDescriptionNote == true { return }
+                    self.isDescriptionNote = !self.isDescriptionNote
+                    if let cell: DescriptionTableViewCell = self.tableView.cellForRow(at: indexPath) as? DescriptionTableViewCell {
+                        cell.updateAutoLayout()
+                    }
+
+                    self.tableView.beginUpdates()
+                    self.tableView.reloadRows(at: [indexPath], with: .automatic)
+                    self.tableView.endUpdates()
+
+                    break
+                default:
+                    break
+                }
+
+
+            }).disposed(by: self.disposeBag)
     }
 }
 
@@ -256,7 +248,7 @@ extension SearchDetailViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 8
+        return 6
     }
 }
 

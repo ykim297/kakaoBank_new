@@ -11,6 +11,7 @@ import UIKit
 enum TextColorStyle: Int {
     case primary
     case gray
+    case blue
     
     public var color: UIColor {
         switch self {
@@ -18,6 +19,8 @@ enum TextColorStyle: Int {
             return .black
         case .gray:
             return .gray
+        case .blue:
+            return .blue            
         }
     }
 }

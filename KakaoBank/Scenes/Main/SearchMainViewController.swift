@@ -192,7 +192,7 @@ extension SearchMainViewController {
             if isResultShow {
                 let list = self.resultTableViewController.searchResultList
                 self.interactor?.searchDetailSelected(list[indexPath.row])
-                let segue = UIStoryboardSegue(identifier: "detailView", source: self, destination: SearchDetailViewController())
+//                let segue = UIStoryboardSegue(identifier: "detailView", source: self, destination: SearchDetailViewController())
 //                self.router?.routeToDetail(segue: segue)
                 self.router?.routeToDetail()
 

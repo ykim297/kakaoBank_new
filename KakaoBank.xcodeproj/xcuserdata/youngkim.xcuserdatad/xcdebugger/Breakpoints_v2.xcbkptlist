@@ -103,16 +103,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "78C3351E-A7C0-4724-B685-0E45353F4AA8"
+            uuid = "172D0666-7074-4B3C-B48F-62330733ACEB"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "KakaoBank/Scenes/Detail/SearchDetailViewController.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "160"
-            endingLineNumber = "160"
-            landmarkName = "setTableViewDataSource()"
+            startingLineNumber = "225"
+            endingLineNumber = "225"
+            landmarkName = "setTableViewSelection()"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

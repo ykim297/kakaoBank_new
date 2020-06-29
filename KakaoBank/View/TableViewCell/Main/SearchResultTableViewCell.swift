@@ -176,7 +176,7 @@ extension SearchResultTableViewCell {
                     if dic.userRatingCount.digits[1] > 0 {
                         countNumberLabel.text = "\(dic.userRatingCount.digits[0]).\(dic.userRatingCount.digits[1])천"
                     } else {
-                        countNumberLabel.text = "\(String(describing: dic.userRatingCount.digits.first))천"
+                        countNumberLabel.text = "\(dic.userRatingCount.digits[0])천"
                     }
                 }
             } else {

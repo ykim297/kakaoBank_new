@@ -22,21 +22,10 @@ class AppManager {
     
     func addRecentSearchWord(text: String) {
         let defaults = UserDefaults.standard
-        var recentSearchWords = defaults.stringArray(forKey: userDefault_RecentSearchWords) ?? [String]()
-
-        if recentSearchWords.count != 0 {
-            for i in 0..<recentSearchWords.count - 1 {
-                if i > recentSearchWords.count - 1 {
-                    return
-                }
-                if recentSearchWords[i] == text {
-                    recentSearchWords.remove(at: i)                    
-                }
-            }
-        }
-        
-        recentSearchWords.append(text)
-        defaults.set(recentSearchWords, forKey: userDefault_RecentSearchWords)
+        var recentSearchWords = defaults.stringArray(forKey: userDefault_RecentSearchWords) ?? [String]()        
+        recentSearchWords.insert(text, at: 0)
+        let reorder = recentSearchWords.orderedSet
+        defaults.set(reorder, forKey: userDefault_RecentSearchWords)
     }
     
     func getRecentSearchWordList() -> Array<String>{
@@ -52,4 +41,15 @@ class AppManager {
         defaults.set(recentSearchWords, forKey: userDefault_RecentSearchWords)
     }
 
+}
+
+extension RangeReplaceableCollection where Element: Hashable {
+    var orderedSet: Self {
+        var set = Set<Element>()
+        return filter { set.insert($0).inserted }
+    }
+    mutating func removeDuplicates() {
+        var set = Set<Element>()
+        removeAll { !set.insert($0).inserted }
+    }
 }
