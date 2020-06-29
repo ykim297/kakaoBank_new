@@ -15,7 +15,7 @@ import RxSwift
 import RxCocoa
 
 protocol SearchDetailDisplayLogic: class {
-    func displaySomething(viewModel: SearchDetail.Something.ViewModel)
+    func display(viewModel: SearchDetail.Model.ViewModel)
 }
 
 class SearchDetailViewController: BaseViewController, SearchDetailDisplayLogic {
@@ -94,18 +94,13 @@ class SearchDetailViewController: BaseViewController, SearchDetailDisplayLogic {
         self.setTableViewCell()
     }
     
-    // MARK: Do something
-    
-    //@IBOutlet weak var nameTextField: UITextField!
-    
-//    @IBOutlet weak var tableView: UITableView!
-    func doSomething() {
-        let request = SearchDetail.Something.Request()
-        interactor?.doSomething(request: request)
+    // MARK: 현재 버젼에서는 사용하지 않는 기능
+    func requestData() {
+        let request = SearchDetail.Model.Request()
+        interactor?.request(request: request)
     }
     
-    func displaySomething(viewModel: SearchDetail.Something.ViewModel) {
-        //nameTextField.text = viewModel.name
+    func display(viewModel: SearchDetail.Model.ViewModel) {
     }
 }
 
@@ -167,6 +162,13 @@ extension SearchDetailViewController {
                     let cell = tableView.dequeueReusableCell(for: indexPath,
                                                              cellType: BasicInfoTableViewCell.self)
 
+                    cell.shareButton
+                        .rx.tap
+                        .subscribe(onNext: { [weak self] in
+                            guard let self = self else { return }
+                            self.selectedSharebutton()
+                        }).disposed(by: self.disposeBag)
+                    
                     cell.setup(dic: item)
                     return cell
                 case RatingInfoTableViewCell.identifier:
@@ -259,5 +261,16 @@ extension SearchDetailViewController: UIScrollViewDelegate {
         } else {
             navigationItem.titleView?.isHidden = true
         }
+    }
+}
+
+extension SearchDetailViewController {
+    private func selectedSharebutton() {
+        guard let item = self.detailItem else { return }
+        let urlShare = [ item.trackViewUrl ]
+        let activityViewController = UIActivityViewController(activityItems: urlShare,
+                                                              applicationActivities: nil)
+        activityViewController.popoverPresentationController?.sourceView = self.view
+        self.present(activityViewController, animated: true, completion: nil)
     }
 }

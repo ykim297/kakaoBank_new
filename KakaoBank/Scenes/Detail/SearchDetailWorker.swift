@@ -12,9 +12,7 @@
 
 import UIKit
 
-class SearchDetailWorker
-{
-  func doSomeWork()
-  {
-  }
+class SearchDetailWorker {
+    func requestData() {
+    }
 }

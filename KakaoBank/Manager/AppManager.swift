@@ -22,7 +22,7 @@ class AppManager {
     
     func addRecentSearchWord(text: String) {
         let defaults = UserDefaults.standard
-        var recentSearchWords = defaults.stringArray(forKey: userDefault_RecentSearchWords) ?? [String]()        
+        var recentSearchWords = defaults.stringArray(forKey: userDefault_RecentSearchWords) ?? [String]()
         recentSearchWords.insert(text, at: 0)
         let reorder = recentSearchWords.orderedSet
         defaults.set(reorder, forKey: userDefault_RecentSearchWords)

@@ -12,28 +12,26 @@
 
 import UIKit
 
-protocol SearchDetailBusinessLogic
-{
-  func doSomething(request: SearchDetail.Something.Request)
+protocol SearchDetailBusinessLogic {
+    func request(request: SearchDetail.Model.Request)
 }
 
 protocol SearchDetailDataStore {
-  var selectedSearchData: SearchResultModel? { get set }
+    var selectedSearchData: SearchResultModel? { get set }
 }
 
 class SearchDetailInteractor: SearchDetailBusinessLogic, SearchDetailDataStore {
-  var presenter: SearchDetailPresentationLogic?
-  var worker: SearchDetailWorker?
-  var selectedSearchData: SearchResultModel?
-  
-  // MARK: Do something
-  
-  func doSomething(request: SearchDetail.Something.Request)
-  {
-    worker = SearchDetailWorker()
-    worker?.doSomeWork()
+    var presenter: SearchDetailPresentationLogic?
+    var worker: SearchDetailWorker?
+    var selectedSearchData: SearchResultModel?
     
-    let response = SearchDetail.Something.Response()
-    presenter?.presentSomething(response: response)
-  }
+    // MARK: Do something
+    
+    func request(request: SearchDetail.Model.Request) {
+        worker = SearchDetailWorker()
+        worker?.requestData()
+        
+        let response = SearchDetail.Model.Response()
+        presenter?.present(response: response)
+    }
 }
