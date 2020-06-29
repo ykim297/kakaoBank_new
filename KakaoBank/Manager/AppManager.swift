@@ -20,21 +20,20 @@ class AppManager {
     }()
 
     
-    func addRecentSearchWord(text:String) {
+    func addRecentSearchWord(text: String) {
         let defaults = UserDefaults.standard
         var recentSearchWords = defaults.stringArray(forKey: userDefault_RecentSearchWords) ?? [String]()
 
         if recentSearchWords.count != 0 {
             for i in 0..<recentSearchWords.count - 1 {
-                if recentSearchWords[i] == text {
+                if i > recentSearchWords.count - 1 {
                     return
+                }
+                if recentSearchWords[i] == text {
+                    recentSearchWords.remove(at: i)                    
                 }
             }
         }
-
-//        if recentSearchWords.count > 4 {
-//            recentSearchWords.removeFirst()
-//        }
         
         recentSearchWords.append(text)
         defaults.set(recentSearchWords, forKey: userDefault_RecentSearchWords)

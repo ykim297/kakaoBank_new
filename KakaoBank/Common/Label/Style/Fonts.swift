@@ -15,11 +15,16 @@ import UIKit
 #endif
 
 class Fonts {
-    public static var navigationTitle = UIFont.navigationTitle
-    public static var bigTitle = UIFont.bigTitle
     public static var title = UIFont.title
-    public static var boldTitle = UIFont.boldTitle
     public static var subTitle = UIFont.subTitle
+    public static var button = UIFont.button
+    public static var bigTitle = UIFont.bigTitle
+    
+    public static var navigationTitle = UIFont.navigationTitle
+    
+    
+    public static var boldTitle = UIFont.boldTitle
+    
     public static var lightSubTitle = UIFont.lightSubTitle
     public static var price = UIFont.price
     public static var body = UIFont.body

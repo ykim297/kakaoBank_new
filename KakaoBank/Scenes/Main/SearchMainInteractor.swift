@@ -12,30 +12,36 @@
 
 import UIKit
 
-protocol SearchMainBusinessLogic
-{
-  func doSomething(request: SearchMain.Something.Request)
+protocol SearchMainBusinessLogic{
+    func getSearchList(request: SearchMain.Search.Request)
+    func searchDetailSelected(_ item: SearchResultModel?)
 }
 
-protocol SearchMainDataStore
-{
-  //var name: String { get set }
+protocol SearchMainDataStore {
+    var selectedSearchData: SearchResultModel? { get set }
 }
 
-class SearchMainInteractor: SearchMainBusinessLogic, SearchMainDataStore
-{
-  var presenter: SearchMainPresentationLogic?
-  var worker: SearchMainWorker?
-  //var name: String = ""
-  
-  // MARK: Do something
-  
-  func doSomething(request: SearchMain.Something.Request)
-  {
-    worker = SearchMainWorker()
-    worker?.doSomeWork()
+class SearchMainInteractor: SearchMainBusinessLogic, SearchMainDataStore {
+    var presenter: SearchMainPresentationLogic?
+    var worker: SearchMainWorker = SearchMainWorker()
+    var selectedSearchData: SearchResultModel?
     
-    let response = SearchMain.Something.Response()
-    presenter?.presentSomething(response: response)
-  }
+    
+    // MARK: DataStore
+    func searchDetailSelected(_ item: SearchResultModel?) {
+        selectedSearchData = item
+    }
+    
+    // MARK: Do Connect
+    func getSearchList(request: SearchMain.Search.Request) {
+        
+        worker.getList(model: request, completion: { success, model in
+            if success, let m = model {
+                self.presenter?.present(response: m)
+            } else {
+                self.presenter?.presentError()
+            }
+        })
+    }
+
 }

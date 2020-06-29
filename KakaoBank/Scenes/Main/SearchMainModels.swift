@@ -12,20 +12,20 @@
 
 import UIKit
 
-enum SearchMain
-{
-  // MARK: Use cases
-  
-  enum Something
-  {
-    struct Request
-    {
-    }
-    struct Response
-    {
-    }
-    struct ViewModel
-    {
-    }
-  }
+enum SearchMain {
+    // MARK: Use cases
+        enum Search {
+            struct Request{
+                let term: String
+                let country: String
+                let media: String
+            }
+            struct Response: Codable {
+                let resultCount: Int
+                let results: [SearchResultModel]
+            }
+            struct ViewModel {
+                let lists: [SearchResultModel]    
+            }
+        }
 }

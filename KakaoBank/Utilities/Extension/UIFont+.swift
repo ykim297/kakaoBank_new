@@ -14,30 +14,40 @@
 
 
 extension UIFont {
-    
-    class var navigationTitle: UIFont {
-        return UIFont.systemFont(ofSize: 40.0, weight: .bold)
-    }
-    
-    class var bigTitle: UIFont {
-        return UIFont.systemFont(ofSize: 30.0, weight: .bold)
-    }
-    
+
     class var title: UIFont {
-        return UIFont.systemFont(ofSize: 13.0, weight: .regular)
-    }
-    
-    class var boldTitle: UIFont {
-        return UIFont.systemFont(ofSize: 18.0, weight: .bold)
+        return UIFont.systemFont(ofSize: 15.0, weight: .bold)
     }
     
     class var subTitle: UIFont {
         return UIFont.systemFont(ofSize: 13.0, weight: .regular)
     }
+
+    class var button: UIFont {
+        return UIFont.systemFont(ofSize: 15.0, weight: .bold)
+    }
+    
+    class var bigTitle: UIFont {
+        return UIFont.systemFont(ofSize: 20, weight: .bold)
+    }
     
     class var lightSubTitle: UIFont {
-        return UIFont.systemFont(ofSize: 15.0, weight: .light)
+        return UIFont.systemFont(ofSize: 10.0, weight: .light)
     }
+
+    
+    
+    class var navigationTitle: UIFont {
+        return UIFont.systemFont(ofSize: 40.0, weight: .bold)
+    }
+    
+    
+
+    class var boldTitle: UIFont {
+        return UIFont.systemFont(ofSize: 18.0, weight: .bold)
+    }
+    
+    
     
     class var price: UIFont {
         return UIFont.systemFont(ofSize: 33.0, weight: .bold)

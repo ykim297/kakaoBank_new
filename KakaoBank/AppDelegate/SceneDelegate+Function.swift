@@ -14,7 +14,7 @@ extension SceneDelegate {
         
         DispatchQueue.main.async {
             let registerStoryboard = UIStoryboard(name: "Search", bundle: nil)
-            let viewController = registerStoryboard.instantiateViewController(withIdentifier: "SearchMainViewController")
+            let viewController = registerStoryboard.instantiateViewController(withIdentifier: "SearchMainView")
             let navigationController = BaseNavigationController(rootViewController: viewController)
             navigationController.navigationBar.isTranslucent = false
             self.window?.rootViewController = navigationController

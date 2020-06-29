@@ -12,49 +12,67 @@
 
 import UIKit
 
-@objc protocol SearchMainRoutingLogic
-{
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
+@objc protocol SearchMainRoutingLogic {
+    func routeToDetail(segue: UIStoryboardSegue?)
+    func routeToDetail()
 }
 
-protocol SearchMainDataPassing
-{
-  var dataStore: SearchMainDataStore? { get }
+protocol SearchMainDataPassing {
+    var dataStore: SearchMainDataStore? { get }
 }
 
-class SearchMainRouter: NSObject, SearchMainRoutingLogic, SearchMainDataPassing
-{
-  weak var viewController: SearchMainViewController?
-  var dataStore: SearchMainDataStore?
-  
-  // MARK: Routing
-  
-  //func routeToSomewhere(segue: UIStoryboardSegue?)
-  //{
-  //  if let segue = segue {
-  //    let destinationVC = segue.destination as! SomewhereViewController
-  //    var destinationDS = destinationVC.router!.dataStore!
-  //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-  //  } else {
-  //    let storyboard = UIStoryboard(name: "Main", bundle: nil)
-  //    let destinationVC = storyboard.instantiateViewController(withIdentifier: "SomewhereViewController") as! SomewhereViewController
-  //    var destinationDS = destinationVC.router!.dataStore!
-  //    passDataToSomewhere(source: dataStore!, destination: &destinationDS)
-  //    navigateToSomewhere(source: viewController!, destination: destinationVC)
-  //  }
-  //}
-
-  // MARK: Navigation
-  
-  //func navigateToSomewhere(source: SearchMainViewController, destination: SomewhereViewController)
-  //{
-  //  source.show(destination, sender: nil)
-  //}
-  
-  // MARK: Passing data
-  
-  //func passDataToSomewhere(source: SearchMainDataStore, destination: inout SomewhereDataStore)
-  //{
-  //  destination.name = source.name
-  //}
+class SearchMainRouter: NSObject, SearchMainRoutingLogic, SearchMainDataPassing {
+    weak var viewController: SearchMainViewController?
+    var dataStore: SearchMainDataStore?
+    
+    func routeToDetail() {
+        let vc = SearchDetailViewController()
+        passDataTo(destination: vc, dataStore: &dataStore!)
+        self.navigateToSearchDetail(source: viewController!, destination: vc)
+    }
+    
+    // MARK: Navigation
+    func navigateToSearchDetail(source: SearchMainViewController,
+                                destination: SearchDetailViewController) {
+        source.navigationController?.navigationBar.prefersLargeTitles = false
+        source.navigationItem.largeTitleDisplayMode = .never
+        source.show(destination, sender: nil)
+    }
+    
+    // MARK: Passing data
+    func passDataTo(destination: SearchDetailViewController,
+                    dataStore: inout SearchMainDataStore) {
+        if let item = dataStore.selectedSearchData {
+            destination.detailItem = item
+        }
+    }
+    
+    // MARK: Routing
+    func routeToDetail(segue: UIStoryboardSegue?) {
+        if let segue = segue {
+            let destinationVC = segue.destination as! SearchDetailViewController
+            var destinationDS = destinationVC.router!.dataStore!
+            passDataToSomewhere(source: dataStore!, destination: &destinationDS)
+            navigateToSomewhere(source: viewController!, destination: destinationVC)
+        } else {
+            let storyboard = UIStoryboard(name: "Search", bundle: nil)
+            let destinationVC = storyboard.instantiateViewController(withIdentifier: "SearchDetailView") as! SearchDetailViewController
+            var destinationDS = destinationVC.router!.dataStore!
+            passDataToSomewhere(source: dataStore!, destination: &destinationDS)
+            navigateToSomewhere(source: viewController!, destination: destinationVC)
+        }
+    }
+    
+    // MARK: Navigation
+    func navigateToSomewhere(source: SearchMainViewController, destination: SearchDetailViewController) {
+        source.navigationController?.navigationBar.prefersLargeTitles = false
+        source.navigationItem.largeTitleDisplayMode = .never
+        source.show(destination, sender: nil)
+    }
+    
+    // MARK: Passing data
+    
+    func passDataToSomewhere(source: SearchMainDataStore, destination: inout SearchDetailDataStore) {
+        destination.selectedSearchData = source.selectedSearchData
+    }
 }

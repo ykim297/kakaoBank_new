@@ -12,8 +12,7 @@ import UIKit
 class BaseNavigationController: UINavigationController {
     
     init() {
-//        super.init(navigationBarClass: BaseNavigationBar.self, toolbarClass: nil)
-        super.init(navigationBarClass: UINavigationBar.self, toolbarClass: nil)
+        super.init(navigationBarClass: BaseNavigationBar.self, toolbarClass: nil)
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -21,8 +20,7 @@ class BaseNavigationController: UINavigationController {
     }
     
     override init(rootViewController: UIViewController) {
-//        super.init(navigationBarClass: BaseNavigationBar.self, toolbarClass: nil)
-        super.init(navigationBarClass: UINavigationBar.self, toolbarClass: nil)
+        super.init(navigationBarClass: BaseNavigationBar.self, toolbarClass: nil)
         self.viewControllers = [rootViewController]
     }
     
@@ -35,8 +33,6 @@ class BaseNavigationController: UINavigationController {
         navigationBar.backgroundColor = .white
         self.navigationBar.prefersLargeTitles = true
         self.navigationItem.largeTitleDisplayMode = .always
-
-
         // do whatever custom setup stuff you want here
     }
         

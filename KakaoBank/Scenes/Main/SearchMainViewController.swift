@@ -15,7 +15,8 @@ import RxSwift
 import RxCocoa
 
 protocol SearchMainDisplayLogic: class {
-    func displaySomething(viewModel: SearchMain.Something.ViewModel)
+    func display(response: SearchMain.Search.Response)
+    func displayError()
 }
 
 
@@ -23,6 +24,15 @@ class SearchMainViewController: BaseViewController, SearchMainDisplayLogic {
     
     var interactor: SearchMainBusinessLogic?
     var router: (NSObjectProtocol & SearchMainRoutingLogic & SearchMainDataPassing)?
+
+    @IBOutlet weak var tableView: UITableView!
+    
+    let disposeBag = DisposeBag()
+    let recent: BehaviorRelay<[String]> = BehaviorRelay(value: [])
+    var searchController: UISearchController?
+    let resultTableViewController: ResultTableViewController = ResultTableViewController()    
+    var recentWords: [String]?
+
     
     // MARK: Object lifecycle
     
@@ -61,180 +71,177 @@ class SearchMainViewController: BaseViewController, SearchMainDisplayLogic {
             }
         }
     }
-    
-    // MARK: View lifecycle
-    func setupNavBar() {
-        self.title = "검색"
-//        let searchController = UISearchController(searchResultsController: nil)
-//        searchController.searchBar.delegate = self
-//        navigationItem.searchController = searchController
-    }
-    
+        
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        tableView.setLayerBorder()
-        searchController.searchResultsUpdater = self
-        searchController.obscuresBackgroundDuringPresentation = false
-        searchController.searchBar.placeholder = "App Store"
-        navigationItem.searchController = searchController
-        definesPresentationContext = true
-        searchController.searchBar.delegate = self
-        searchController.searchBar.backgroundColor = .white
-        
-//        AppManager.shared.addRecentSearchWord(text: "카카오")
-//        AppManager.shared.addRecentSearchWord(text: "카카오뱅")
-//        AppManager.shared.addRecentSearchWord(text: "카")
-//        AppManager.shared.addRecentSearchWord(text: "카카")
-//        AppManager.shared.addRecentSearchWord(text: "카카오뱅크")
-//        AppManager.shared.addRecentSearchWord(text: "ㅋ")
-//        AppManager.shared.addRecentSearchWord(text: "카ㅋ")
-//        AppManager.shared.addRecentSearchWord(text: "카카ㅇ")
-//        AppManager.shared.addRecentSearchWord(text: "카카오ㅂ")
-//        AppManager.shared.addRecentSearchWord(text: "카카오배")
-//        AppManager.shared.addRecentSearchWord(text: "카카오뱅ㅋ")
-        tableView.delegate = self
-        tableView.dataSource = self
-        
-        let singleImageContent = UINib(nibName: "RecentWordTableViewCell", bundle: nil)
-        self.tableView.register(singleImageContent, forCellReuseIdentifier: "RecentWordTableViewCell")
-
-        setupNavBar()
-        
+        self.setComponents()
+        self.setTableViewCell()
+                
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        self.navigationController?.navigationBar.prefersLargeTitles = true
+        self.navigationItem.largeTitleDisplayMode = .always
         navigationItem.hidesSearchBarWhenScrolling = false
     }
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-//        navigationItem.hidesSearchBarWhenScrolling = true
+        navigationItem.hidesSearchBarWhenScrolling = true
         self.tableView.contentInsetAdjustmentBehavior = .never
 
     }
-    // MARK: Do something
     
-    @IBOutlet weak var tableView: UITableView!
-    //    var words: [Candy] = []
-    let searchController = UISearchController(searchResultsController: nil)
-    var filteredWords: [String] = []
-    
-    var isSearchBarEmpty: Bool {
-        return searchController.searchBar.text?.isEmpty ?? true
+    // MARK: Do request
+    func requestData(word: String) {
+        let request = SearchMain.Search.Request(term: word,
+                                                country: "kr",
+                                                media: "software")
+        interactor?.getSearchList(request: request)
     }
-    
-    var isFiltering: Bool {
-        let searchBarScopeIsFiltering = searchController.searchBar.selectedScopeButtonIndex != 0
-        return searchController.isActive && (!isSearchBarEmpty || searchBarScopeIsFiltering)
-    }
-    
-    
-    func filterContentForSearchText(_ searchText: String) {
-        let list = AppManager.shared.getRecentSearchWordList()
-        filteredWords = list.filter { (list: String) -> Bool in
-            
-            if isSearchBarEmpty {
-                return false
-            }
-            else {
-                return list.lowercased().contains(searchText.lowercased())
-            }
+
+    func display(response: SearchMain.Search.Response) {
+        self.resultTableViewController.isShowResult = true        
+        self.resultTableViewController.searchResultList = response.results
+        DispatchQueue.main.async {
+            self.resultTableViewController.tableView.reloadData()
         }
-
-        tableView.reloadData()
-    }
-    func doSomething() {
-        let request = SearchMain.Something.Request()
-        interactor?.doSomething(request: request)
     }
     
-    func displaySomething(viewModel: SearchMain.Something.ViewModel) {
-        //nameTextField.text = viewModel.name
+    func displayError() {
+        alert("Server Error", message: "Server Error")
+        self.resultTableViewController.tableView.reloadData()
     }
     
     
 }
 
-extension SearchMainViewController: UISearchResultsUpdating {
-  func updateSearchResults(for searchController: UISearchController) {
-    let searchBar = searchController.searchBar
-//    let category = Candy.Category(rawValue:
-//      searchBar.scopeButtonTitles![searchBar.selectedScopeButtonIndex])
-    filterContentForSearchText(searchBar.text!)
-  }
-}
+// Draw
+extension SearchMainViewController {
+    private func setComponents() {
+        searchController = UISearchController(searchResultsController: resultTableViewController)
+        searchController?.searchResultsUpdater = resultTableViewController
+        searchController?.searchBar.delegate = resultTableViewController
+        searchController?.obscuresBackgroundDuringPresentation = false
+        searchController?.searchBar.placeholder = "App Store"
+        
+        searchController?
+            .searchBar.rx
+            .cancelButtonClicked
+        .subscribe(onNext: { () in
+            self.tableView.reloadData()
+        })
+        .disposed(by: disposeBag)
 
-
-
-
-extension SearchMainViewController: UISearchBarDelegate {
-  func searchBar(_ searchBar: UISearchBar, selectedScopeButtonIndexDidChange selectedScope: Int) {
-//    let category = Candy.Category(rawValue:
-//      searchBar.scopeButtonTitles![selectedScope])
-    filterContentForSearchText(searchBar.text!)
-  }
-  
-  func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        self.title = "검색"
+        navigationItem.searchController = searchController
+        searchController?.searchBar.backgroundColor = .white
+        definesPresentationContext = true
+                
+                
+        self.tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        let singleImageContent = UINib(nibName: "RecentWordTableViewCell", bundle: nil)
+        self.tableView.register(singleImageContent, forCellReuseIdentifier: "RecentWordTableViewCell")
+        self.recent.accept(AppManager.shared.getRecentSearchWordList())
+    }
     
-  }
+    
+}
+
+// RxTableView
+extension SearchMainViewController {
+    private func setTableViewCell() {
+        self.setTableViewDataSource()
+        self.setTableViewSelection()
+        self.setResultTableViewSelection()
+    }
+    
+    private func setTableViewDataSource() {
+        recent.asObservable()
+            .bind(to: tableView.rx.items) { (tableView, row, element) in
+                let list = AppManager.shared.getRecentSearchWordList()
+                let indexPath = IndexPath(item: row, section: 0)
+                if let cell = tableView.dequeueReusableCell(withIdentifier: "RecentWordTableViewCell", for:indexPath) as? RecentWordTableViewCell {
+                    cell.recentLabel.text = list[indexPath.row]
+                    cell.selectionStyle = .none
+                    return cell
+                }
+                return UITableViewCell()
+        }
+        .disposed(by: disposeBag)
+    }
+    
+    
+    private func setTableViewSelection() {
+        self.tableView.rx.itemSelected
+            .subscribe(onNext: { [weak self] indexPath in
+                guard let self = self else { return }
+                let list = AppManager.shared.getRecentSearchWordList()
+                self.searchController?.isActive = true
+                self.searchController?.searchBar.text = list[indexPath.row]
+                self.selectedSearchButton()
+            }).disposed(by: self.disposeBag)
+    }
+    
+    private func setResultTableViewSelection() {
+        resultTableViewController.tableView.rx.itemSelected
+        .subscribe(onNext: { [weak self] indexPath in
+            guard let self = self else { return }
+            let isResultShow = self.resultTableViewController.isShowResult
+            if isResultShow {
+                let list = self.resultTableViewController.searchResultList
+                self.interactor?.searchDetailSelected(list[indexPath.row])
+                let segue = UIStoryboardSegue(identifier: "detailView", source: self, destination: SearchDetailViewController())
+//                self.router?.routeToDetail(segue: segue)
+                self.router?.routeToDetail()
+
+            } else {
+                let list = self.resultTableViewController.filteredWords
+                AppManager.shared.addRecentSearchWord(text: list[indexPath.row])
+                self.searchController?.searchBar.text = list[indexPath.row]
+                self.selectedSearchButton()
+            }
+        }).disposed(by: self.disposeBag)
+        
+        searchController?.searchBar
+            .rx.searchButtonClicked
+            .subscribe(onNext: { [weak self] _ in
+            guard let self = self else { return }
+                self.selectedSearchButton()                
+        }).disposed(by: self.disposeBag)
+    }
+    
+    func selectedSearchButton() {
+        guard let word = self.searchController?.searchBar.text else {
+            return
+        }
+        
+        AppManager.shared.addRecentSearchWord(text: word)
+        self.recent.accept(AppManager.shared.getRecentSearchWordList())
+        self.tableView.reloadData()
+                
+        self.requestData(word: word)
+    }
 }
 
 
-extension SearchMainViewController: UITableViewDelegate, UITableViewDataSource {
+extension SearchMainViewController: UITableViewDelegate {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 1
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
-        if isFiltering {
-          return filteredWords.count
-        }
-        
         let list = AppManager.shared.getRecentSearchWordList()
         return list.count        
     }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        
-        if let cell = tableView.dequeueReusableCell(withIdentifier: "RecentWordTableViewCell", for:indexPath) as? RecentWordTableViewCell {
-//            cell.indexPath = indexPath
-//            cell.selectedIndexPath = self.selectedIndexPath
-//            cell.row = indexPath.row
-//            cell.delegate = self
-//            cell.cellDic = cellInfo
-
-            let list = AppManager.shared.getRecentSearchWordList()
-            
-            if isFiltering {
-                cell.recentLabel.text = filteredWords[indexPath.row]
-              } else {
-                cell.recentLabel.text = list[indexPath.row]
-              }
-
-            cell.selectionStyle = .none
-            return cell
-        }
-
-        
-        return UITableViewCell()
-    }
-    
-    
-//    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-//        return self.searchController.searchBar
-//    }
-//
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return searchController.searchBar.frame.height
-//    }
-    
-    
+                
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 40
     }
     
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        
         let view: UIView = UIView(frame: CGRect(x: 0.0, y: 0.0, width: UIScreen.width, height: 40.0))
         let title: UILabel = UILabel(frame: CGRect(x: 12.0, y: 5.0, width: 150.0, height: 30.0))
         title.backgroundColor = .clear
@@ -245,18 +252,5 @@ extension SearchMainViewController: UITableViewDelegate, UITableViewDataSource {
         view.addSubview(title)
         return view
 
-    }
-}
-
-
-extension SearchMainViewController: UIScrollViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if (scrollView.contentOffset.y >= 45) {
-//            navigationItem.titleView?.addSubview(searchController.searchBar)
-//            navigationItem.searchController = searchController
-        } else {
-            
-//            tableView.tableHeaderView = searchController.searchBar
-        }
     }
 }

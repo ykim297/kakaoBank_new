@@ -25,18 +25,19 @@ enum TextStyle: Int {
     
     public var font: UIFont {
         switch self {
-        case .navigationTitle:
-            return Fonts.navigationTitle
-        case .bigTitle:
-            return Fonts.bigTitle
         case .title:
             return Fonts.title
-        case .boldTitle:
-            return Fonts.boldTitle
         case .subTitle:
             return Fonts.subTitle
+        case .bigTitle:
+            return Fonts.bigTitle
         case .lightSubTitle:
             return Fonts.lightSubTitle
+
+        case .navigationTitle:
+            return Fonts.navigationTitle
+        case .boldTitle:
+            return Fonts.boldTitle
         case .price:
             return Fonts.price
         case .body:
@@ -60,23 +61,27 @@ enum TextStyle: Int {
         var color = UIColor.black
         
         switch self {
+            
+            case .title:
+                lineHeight = 18.0
+                color = .black
+            case .subTitle:
+                lineHeight = 15.0
+                color = .gray
+            case .bigTitle:
+                lineHeight = 40.0
+                color = .black
+
+
+
         case .navigationTitle:
             lineHeight = 45.0
-            color = .black
-        case .bigTitle:
-            lineHeight = 33.0
-            color = .black
-        case .title:
-            lineHeight = 16.0
             color = .black
         case .boldTitle:
             lineHeight = 20.0
             color = .black
-        case .subTitle:
-            lineHeight = 16.0
-            color = .gray
         case .lightSubTitle:
-            lineHeight = 18.0
+            lineHeight = 13.0
             color = .black
         case .price:
             lineHeight = 36.0

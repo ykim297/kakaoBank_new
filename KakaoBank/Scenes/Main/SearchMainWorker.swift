@@ -12,9 +12,20 @@
 
 import UIKit
 
-class SearchMainWorker
-{
-  func doSomeWork()
-  {
-  }
+class SearchMainWorker {
+    func getList(model: SearchMain.Search.Request,
+                 completion: @escaping (Bool, SearchMain.Search.Response?) -> Void) {
+        
+        NetworkManager.shared.getSearchAppStoreList(model: model) { model, error in
+            if let _ = error {
+                completion(false, nil)
+            } else {
+                if let m = model {
+                    let model = SearchMain.Search.Response(resultCount: m.resultCount, results: m.results)
+                    completion(true, model)
+
+                }
+            }
+        }
+    }
 }
