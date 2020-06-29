@@ -73,6 +73,8 @@
 		19D9155824AA1F3100DF4949 /* ScreenImageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D9155724AA1F3100DF4949 /* ScreenImageTableViewCell.swift */; };
 		19D9155A24AA22C000DF4949 /* DescriptionTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D9155924AA22C000DF4949 /* DescriptionTableViewCell.swift */; };
 		19D9155C24AA250800DF4949 /* CompanyInfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D9155B24AA250800DF4949 /* CompanyInfoTableViewCell.swift */; };
+		19D9155E24AA30EF00DF4949 /* InfoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D9155D24AA30EF00DF4949 /* InfoTableViewCell.swift */; };
+		19D9156024AA333F00DF4949 /* SearchDetailSimpleCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 19D9155F24AA333F00DF4949 /* SearchDetailSimpleCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -137,6 +139,8 @@
 		19D9155724AA1F3100DF4949 /* ScreenImageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScreenImageTableViewCell.swift; sourceTree = "<group>"; };
 		19D9155924AA22C000DF4949 /* DescriptionTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DescriptionTableViewCell.swift; sourceTree = "<group>"; };
 		19D9155B24AA250800DF4949 /* CompanyInfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompanyInfoTableViewCell.swift; sourceTree = "<group>"; };
+		19D9155D24AA30EF00DF4949 /* InfoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InfoTableViewCell.swift; sourceTree = "<group>"; };
+		19D9155F24AA333F00DF4949 /* SearchDetailSimpleCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchDetailSimpleCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -408,6 +412,8 @@
 				19D9155724AA1F3100DF4949 /* ScreenImageTableViewCell.swift */,
 				19D9155924AA22C000DF4949 /* DescriptionTableViewCell.swift */,
 				19D9155B24AA250800DF4949 /* CompanyInfoTableViewCell.swift */,
+				19D9155D24AA30EF00DF4949 /* InfoTableViewCell.swift */,
+				19D9155F24AA333F00DF4949 /* SearchDetailSimpleCell.swift */,
 			);
 			path = Detail;
 			sourceTree = "<group>";
@@ -515,6 +521,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				19D9155E24AA30EF00DF4949 /* InfoTableViewCell.swift in Sources */,
 				1956EDFB24A8FA9B00D450B0 /* NetworkManager.swift in Sources */,
 				1970006824A8463600D11916 /* Fonts.swift in Sources */,
 				1970007C24A8472800D11916 /* Units.swift in Sources */,
@@ -560,6 +567,7 @@
 				1970006724A8463600D11916 /* TextColorStyle.swift in Sources */,
 				1956EDE324A854CC00D450B0 /* SearchMainPresenter.swift in Sources */,
 				1956EDE424A854CC00D450B0 /* SearchMainWorker.swift in Sources */,
+				19D9156024AA333F00DF4949 /* SearchDetailSimpleCell.swift in Sources */,
 				19D9154924A9BFB800DF4949 /* SearchDetailRouter.swift in Sources */,
 				19D9155624AA10E200DF4949 /* NewInfoTableViewCell.swift in Sources */,
 				1970008024A8472900D11916 /* String+.swift in Sources */,

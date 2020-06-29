@@ -21,7 +21,7 @@ class SearchDetailPresenter: SearchDetailPresentationLogic {
   
   // MARK: Do something
   
-  func present(response: SearchDetail.Something.Response) {
+  func present(response: SearchDetail.Model.Response) {
     let viewModel = SearchDetail.Model.ViewModel()
     viewController?.display(viewModel: viewModel)
   }

@@ -43,7 +43,8 @@ class SearchDetailViewController: BaseViewController, SearchDetailDisplayLogic {
         tableView.register(cellType: ScreenImagesTableViewCell.self)
         tableView.register(cellType: DescriptionTableViewCell.self)
         tableView.register(cellType: CompanyInfoTableViewCell.self)
-        
+        tableView.register(cellType: InfoTableViewCell.self)
+        tableView.register(cellType: SearchDetailSimpleCell.self)
         tableView.contentInsetAdjustmentBehavior = .never
         return tableView
     }()
@@ -139,9 +140,15 @@ extension SearchDetailViewController {
                      NewInfoTableViewCell.identifier,
                      ScreenImagesTableViewCell.identifier,
                      DescriptionTableViewCell.identifier,
-                     CompanyInfoTableViewCell.identifier]
-//                     SearchDetailDescriptionCell.identifier,
-//                     SearchDetailGenreCell.identifier]
+                     CompanyInfoTableViewCell.identifier,
+                     InfoTableViewCell.identifier,
+                     SearchDetailSimpleCell.identifier,
+                     SearchDetailSimpleCell.identifier,
+                     SearchDetailSimpleCell.identifier,
+                     SearchDetailSimpleCell.identifier,
+                     SearchDetailSimpleCell.identifier,
+                     SearchDetailSimpleCell.identifier,
+                     SearchDetailSimpleCell.identifier]
         self.tableViewCellItems.accept(items)
         
         self.setTableViewDataSource()
@@ -200,10 +207,43 @@ extension SearchDetailViewController {
                     cell.setup(dic: item)
 
                     return cell
+                case InfoTableViewCell.identifier:
+                    let cell = tableView.dequeueReusableCell(for: indexPath,
+                                                             cellType: InfoTableViewCell.self)
+                    return cell
+                    
+                case SearchDetailSimpleCell.identifier:
+                    return self.setSimpleCell(dic: item, indexPath: indexPath)
                 default:
                     return UITableViewCell()
                 }
         }.disposed(by: disposeBag)
+    }
+    
+    private func setSimpleCell(dic: SearchResultModel, indexPath: IndexPath) -> SearchDetailSimpleCell {
+                
+        let cell = tableView.dequeueReusableCell(for: indexPath,
+                                                 cellType: SearchDetailSimpleCell.self)
+        switch indexPath.row {
+        case 7:
+            cell.setup(title: "제공자", info: dic.artistName)
+        case 8:
+            let size: String = Units(bytes: Int64(dic.fileSizeBytes)!).getReadableUnit()
+            cell.setup(title: "크기", info: size)
+        case 9:
+            cell.setup(title: "카테고리", info: dic.genres[0])
+        case 10:
+            cell.setup(title: "호환성", info: "이 iPhone와(과) 호환")
+        case 11:
+            cell.setup(title: "언어", info: "한국어")
+        case 12:
+            cell.setup(title: "연령등급", info: dic.trackContentRating)
+        case 13:
+            cell.setup(title: "저작권", info: "Ⓒ \(dic.artistName)")
+        default:
+            return SearchDetailSimpleCell()
+        }
+        return cell
     }
     
     private func setTableViewSelection() {
@@ -250,7 +290,7 @@ extension SearchDetailViewController: UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 6
+        return 14
     }
 }
 
